@@ -1,0 +1,430 @@
+{
+    "cat": [
+        {
+            "group": "Lean & Active",
+            "breeds": "Siamese / Xiêm, Munchkin, Sphynx, Mèo mướp / Ta, Bengal",
+            "weight": "2–4 kg",
+            "emoji": "🐱",
+            "description": "Metabolism cao, năng động, ít mỡ thừa",
+            "stages": [
+                {
+                    "stage": "Kitten (< 1 tuổi)",
+                    "calories": "200–450 kcal/ngày",
+                    "protein": "10–20 g/ngày",
+                    "dry_food": "50–120 g/ngày",
+                    "wet_food": "150–350 g/ngày",
+                    "meals": "4–5 bữa/ngày",
+                    "tips": [
+                        "Hạt cao năng lượng, DHA hỗ trợ não bộ",
+                        "Cho ăn nhiều bữa nhỏ, laser toy nhiều",
+                        "Đạm trong thức ăn: 35–45% DM",
+                        "Thức ăn kitten chuyên dụng (Royal Canin Kitten, Hill's Kitten)"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "180–280 kcal/ngày",
+                    "protein": "8–16 g/ngày",
+                    "dry_food": "45–75 g/ngày",
+                    "wet_food": "130–250 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Cao năng lượng, ít béo, thêm nước",
+                        "Đạm trong thức ăn: 30–40% DM",
+                        "Bổ sung omega-3 cho lông mượt",
+                        "VN nóng ẩm: thêm pate/nước, tránh để ngoài > 30 phút"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "160–250 kcal/ngày",
+                    "protein": "10–18 g/ngày",
+                    "dry_food": "40–65 g/ngày",
+                    "wet_food": "120–220 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Protein cao chống teo cơ",
+                        "Thức ăn dễ tiêu hóa, mềm hơn",
+                        "Kiểm tra thận định kỳ",
+                        "Bổ sung probiotic hỗ trợ tiêu hóa"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Indoor, Hill's Science Diet Indoor Cat, Orijen Cat & Kitten"
+        },
+        {
+            "group": "Stocky & Dễ béo",
+            "breeds": "British Shorthair (Anh lông ngắn), Scottish Fold, Persian / Ba Tư, Exotic Shorthair",
+            "weight": "3–6 kg",
+            "emoji": "🐈",
+            "description": "Dễ tăng cân, cần kiểm soát calo nghiêm ngặt",
+            "stages": [
+                {
+                    "stage": "Kitten (< 1 tuổi)",
+                    "calories": "250–550 kcal/ngày",
+                    "protein": "12–25 g/ngày",
+                    "dry_food": "65–140 g/ngày",
+                    "wet_food": "200–400 g/ngày",
+                    "meals": "4–5 bữa/ngày",
+                    "tips": [
+                        "Theo dõi cân nặng hàng tuần (dễ béo)",
+                        "Đạm 35–45% DM, chất xơ > 3%",
+                        "Không cho ăn thêm snack ngoài khẩu phần",
+                        "Hạt kitten chuyên dụng"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "200–320 kcal/ngày (BSH giảm 10%)",
+                    "protein": "12–22 g/ngày",
+                    "dry_food": "50–85 g/ngày",
+                    "wet_food": "160–300 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Royal Canin BSH/Persian chuyên dụng",
+                        "KIỂM SOÁT CÂN NẶNG: cân mỗi tuần",
+                        "Sau triệt sản: giảm 15–20% calo trong 4–8 tuần",
+                        "Ví dụ: BSH 4.5kg indoor → 240–280 kcal/ngày (~65g hạt + ½ gói pate)"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "180–280 kcal/ngày",
+                    "protein": "15–25 g/ngày",
+                    "dry_food": "45–75 g/ngày",
+                    "wet_food": "140–260 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Hairball control (đặc biệt Persian)",
+                        "Tăng protein chống teo cơ",
+                        "Kiểm tra tim, thận định kỳ",
+                        "Thức ăn mềm hơn cho răng yếu"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin British Shorthair / Persian, Hill's Perfect Weight, Pro Plan Weight Management"
+        },
+        {
+            "group": "Large (Mèo lớn)",
+            "breeds": "Maine Coon, Ragdoll",
+            "weight": "5–9 kg",
+            "emoji": "🦁",
+            "description": "Cần protein cao cho cơ bắp & hỗ trợ khớp",
+            "stages": [
+                {
+                    "stage": "Kitten (< 1 tuổi)",
+                    "calories": "350–600 kcal/ngày",
+                    "protein": "18–30 g/ngày",
+                    "dry_food": "90–160 g/ngày",
+                    "wet_food": "280–480 g/ngày",
+                    "meals": "4–5 bữa/ngày",
+                    "tips": [
+                        "Maine Coon tăng trưởng chậm (~3–4 năm mới đạt size tối đa)",
+                        "Đạm cao > 38% DM",
+                        "Bổ sung glucosamine từ sớm cho khớp",
+                        "Hạt kitten large breed"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "280–450 kcal/ngày",
+                    "protein": "20–35 g/ngày",
+                    "dry_food": "70–120 g/ngày",
+                    "wet_food": "220–400 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Joint support (glucosamine + chondroitin)",
+                        "Royal Canin Maine Coon chuyên dụng",
+                        "Hạt lớn hơn để khuyến khích nhai",
+                        "Bổ sung omega-3 cho lông dài"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "240–400 kcal/ngày",
+                    "protein": "22–38 g/ngày",
+                    "dry_food": "60–105 g/ngày",
+                    "wet_food": "190–350 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Tăng cường hỗ trợ khớp",
+                        "Protein cao duy trì cơ bắp",
+                        "Kiểm tra tim (HCM) định kỳ",
+                        "Thức ăn senior large breed"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Maine Coon, Hill's Large Breed, Orijen Six Fish Cat"
+        }
+    ],
+    "dog": [
+        {
+            "group": "Toy (Siêu nhỏ)",
+            "breeds": "Chihuahua, Pomeranian / Phốc Sóc, Poodle Toy, Yorkshire Terrier",
+            "weight": "1–4 kg",
+            "emoji": "🐶",
+            "description": "Rất dễ hạ đường huyết, cần ăn nhiều bữa nhỏ",
+            "stages": [
+                {
+                    "stage": "Puppy (< 1 tuổi)",
+                    "calories": "150–550 kcal/ngày",
+                    "protein": "5–18 g/ngày",
+                    "dry_food": "40–140 g/ngày",
+                    "wet_food": "120–400 g/ngày",
+                    "meals": "4–5 bữa nhỏ/ngày",
+                    "tips": [
+                        "4–5 bữa nhỏ để chống hạ đường huyết",
+                        "Đạm puppy: 25–35% DM",
+                        "Hạt nhỏ (small kibble) dễ nhai",
+                        "Luôn có nước sạch"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "120–280 kcal/ngày",
+                    "protein": "4–12 g/ngày",
+                    "dry_food": "30–70 g/ngày",
+                    "wet_food": "90–250 g/ngày",
+                    "meals": "3 bữa/ngày",
+                    "tips": [
+                        "Rất dễ lạnh — mặc áo ấm mùa đông",
+                        "Đạm adult: 20–28% DM",
+                        "Hạt Toy/X-Small chuyên dụng",
+                        "Sau triệt sản: giảm 15–20% calo"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "100–240 kcal/ngày",
+                    "protein": "5–14 g/ngày",
+                    "dry_food": "25–60 g/ngày",
+                    "wet_food": "80–220 g/ngày",
+                    "meals": "3 bữa/ngày",
+                    "tips": [
+                        "Protein cao duy trì cơ bắp",
+                        "Hỗ trợ khớp nhỏ (glucosamine)",
+                        "Thức ăn mềm cho răng yếu",
+                        "Kiểm tra tim định kỳ"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin X-Small, Hill's Small & Mini, Acana Small Breed"
+        },
+        {
+            "group": "Small (Nhỏ)",
+            "breeds": "Poodle Mini, Pug, Shih Tzu, French Bulldog / Bull Pháp, Dachshund / Lạp Xưởng",
+            "weight": "5–10 kg",
+            "emoji": "🐕",
+            "description": "Frenchie/Pug: hô hấp ngắn cần kiểm soát calo",
+            "stages": [
+                {
+                    "stage": "Puppy (< 1 tuổi)",
+                    "calories": "300–750 kcal/ngày",
+                    "protein": "12–28 g/ngày",
+                    "dry_food": "75–190 g/ngày",
+                    "wet_food": "220–550 g/ngày",
+                    "meals": "3–4 bữa/ngày",
+                    "tips": [
+                        "Royal Canin Small / Poodle chuyên dụng",
+                        "Dachshund: giữ cân nặng vì lưng dài",
+                        "Đạm puppy: 25–35% DM",
+                        "Hạt small breed kibble"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "250–450 kcal/ngày",
+                    "protein": "10–22 g/ngày",
+                    "dry_food": "65–115 g/ngày",
+                    "wet_food": "200–400 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Frenchie/Pug: hô hấp ngắn → calo kiểm soát",
+                        "Poodle 7kg adult: ~380–420 kcal/ngày (~100g hạt Small)",
+                        "Shih Tzu: omega cho lông dài",
+                        "Sau triệt sản: giảm 15–20% calo"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "220–400 kcal/ngày",
+                    "protein": "12–25 g/ngày",
+                    "dry_food": "55–100 g/ngày",
+                    "wet_food": "180–350 g/ngày",
+                    "meals": "2–3 bữa/ngày",
+                    "tips": [
+                        "Bổ sung glucosamine cho khớp",
+                        "Pug: kiểm soát cân nặng nghiêm ngặt",
+                        "Dachshund: bảo vệ đĩa đệm cột sống",
+                        "Thức ăn senior small breed"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Small / Poodle / Shih Tzu, Hill's Small & Mini, Pro Plan Small Breed"
+        },
+        {
+            "group": "Medium (Trung bình)",
+            "breeds": "Corgi, Beagle, Shiba Inu, Phú Quốc, Bulldog Anh",
+            "weight": "11–25 kg",
+            "emoji": "🦊",
+            "description": "Phú Quốc active cần calo cao hơn 10%",
+            "stages": [
+                {
+                    "stage": "Puppy (< 1 tuổi)",
+                    "calories": "500–1200 kcal/ngày",
+                    "protein": "20–50 g/ngày",
+                    "dry_food": "130–300 g/ngày",
+                    "wet_food": "400–900 g/ngày",
+                    "meals": "3–4 bữa/ngày",
+                    "tips": [
+                        "Corgi: lưng dài → tránh nhảy cao, giữ cân nặng",
+                        "Đạm puppy: 25–35% DM",
+                        "Beagle: rất thèm ăn → cân đo chính xác",
+                        "Phú Quốc: vận động nhiều → calo cao hơn"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "400–850 kcal/ngày",
+                    "protein": "18–40 g/ngày",
+                    "dry_food": "100–220 g/ngày",
+                    "wet_food": "300–650 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Phú Quốc 18kg: ~650–750 kcal/ngày (medium active)",
+                        "Phú Quốc active: cộng 10% calo so với bình thường",
+                        "Corgi: kiểm soát cân nặng nghiêm ngặt",
+                        "Shiba: da nhạy cảm → thức ăn hypoallergenic"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "350–750 kcal/ngày",
+                    "protein": "20–45 g/ngày",
+                    "dry_food": "90–190 g/ngày",
+                    "wet_food": "270–550 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Shiba: da nhạy cảm, thêm omega-3",
+                        "Corgi: hỗ trợ cột sống và khớp",
+                        "Beagle: PHẢI kiểm soát calo (rất dễ béo)",
+                        "Thức ăn senior medium breed"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Medium, Hill's Medium Breed, Acana Heritage"
+        },
+        {
+            "group": "Large (Lớn)",
+            "breeds": "Golden Retriever, Labrador, Husky, German Shepherd (GSD), Phú Quốc lớn",
+            "weight": "26–45 kg",
+            "emoji": "🐕‍🦺",
+            "description": "Dễ béo, cần hỗ trợ khớp lớn",
+            "stages": [
+                {
+                    "stage": "Puppy (< 1 tuổi)",
+                    "calories": "900–1800 kcal/ngày",
+                    "protein": "40–80 g/ngày",
+                    "dry_food": "220–450 g/ngày",
+                    "wet_food": "650–1300 g/ngày",
+                    "meals": "3 bữa/ngày",
+                    "tips": [
+                        "Golden/Lab: DỄ BÉO từ nhỏ → không cho ăn quá nhu cầu",
+                        "Royal Canin Golden Retriever Puppy",
+                        "Đạm puppy: 25–30% DM (không quá cao)",
+                        "Tăng trưởng chậm tốt hơn nhanh (bảo vệ khớp)"
+                    ]
+                },
+                {
+                    "stage": "Adult (1–7 tuổi)",
+                    "calories": "700–1300 kcal/ngày",
+                    "protein": "35–70 g/ngày",
+                    "dry_food": "180–330 g/ngày",
+                    "wet_food": "550–950 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Husky: lông dày → vận động nhiều, calo cao",
+                        "Golden/Lab: KIỂM SOÁT CÂN NẶNG mỗi tuần",
+                        "GSD: da nhạy cảm, thêm omega",
+                        "Sau triệt sản: giảm 15–20% calo"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 7 tuổi)",
+                    "calories": "600–1100 kcal/ngày",
+                    "protein": "40–75 g/ngày",
+                    "dry_food": "150–280 g/ngày",
+                    "wet_food": "450–800 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Joint & heart support (glucosamine + chondroitin)",
+                        "Protein cao chống teo cơ ở tuổi già",
+                        "Golden: kiểm tra ung thư định kỳ",
+                        "Thức ăn senior large breed"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Golden / Labrador / Maxi, Hill's Large Breed, Pro Plan Large Athletic"
+        },
+        {
+            "group": "Giant (Khổng lồ)",
+            "breeds": "Alaskan Malamute, Samoyed lớn, Cane Corso",
+            "weight": "45–60+ kg",
+            "emoji": "🐻",
+            "description": "Ít phổ biến ở VN, cần dinh dưỡng đặc biệt",
+            "stages": [
+                {
+                    "stage": "Puppy (< 18 tháng)",
+                    "calories": "1500–2500 kcal/ngày",
+                    "protein": "65–110 g/ngày",
+                    "dry_food": "380–630 g/ngày",
+                    "wet_food": "1100–1800 g/ngày",
+                    "meals": "3 bữa/ngày",
+                    "tips": [
+                        "Tăng trưởng RẤT CHẬM (~18–24 tháng mới trưởng thành)",
+                        "KHÔNG cho ăn quá nhiều → gây vấn đề xương khớp",
+                        "Đạm puppy: 22–28% DM (KHÔNG quá cao)",
+                        "Hạt Giant Puppy chuyên dụng"
+                    ]
+                },
+                {
+                    "stage": "Adult (18 tháng – 6 tuổi)",
+                    "calories": "1100–1800 kcal/ngày",
+                    "protein": "60–100 g/ngày",
+                    "dry_food": "280–450 g/ngày",
+                    "wet_food": "800–1300 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Royal Canin Giant chuyên dụng",
+                        "Joint support là BẮT BUỘC",
+                        "Không cho tập thể dục sau ăn (nguy cơ xoắn dạ dày)",
+                        "Bát ăn nâng cao tránh nuốt khí"
+                    ]
+                },
+                {
+                    "stage": "Senior (> 6 tuổi)",
+                    "calories": "900–1500 kcal/ngày",
+                    "protein": "55–95 g/ngày",
+                    "dry_food": "230–380 g/ngày",
+                    "wet_food": "650–1100 g/ngày",
+                    "meals": "2 bữa/ngày",
+                    "tips": [
+                        "Joint, heart, và digestive support",
+                        "Tuổi thọ ngắn hơn → kiểm tra sức khỏe 6 tháng/lần",
+                        "Protein duy trì cơ bắp lớn",
+                        "Thức ăn senior Giant breed"
+                    ]
+                }
+            ],
+            "product_suggestion": "Royal Canin Giant, Hill's Large Breed, Eukanuba Large Breed"
+        }
+    ],
+    "general_tips": [
+        "Đạm trong thức ăn: Mèo kitten 35–45% DM, adult 30–40%; Chó puppy 25–35%, adult 20–28%",
+        "Sau triệt sản: Giảm 15–20% calo trong 4–8 tuần",
+        "VN nóng ẩm: Thức ăn ướt + nước lạnh, tránh để ngoài > 30 phút",
+        "Bổ sung: Chỉ theo hướng dẫn thú y (omega-3 cho lông, probiotic tiêu hóa)",
+        "Hạt khô: khoảng 380–420 kcal/100g | Pate ướt: khoảng 80–110 kcal/100g",
+        "Luôn cân thú cưng hàng tuần để điều chỉnh khẩu phần"
+    ]
+}

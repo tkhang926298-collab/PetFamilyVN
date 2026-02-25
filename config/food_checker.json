@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Sô-cô-la",
+    "safe": false,
+    "severity": "high",
+    "reason": "Chứa theobromine, gây nôn, co giật, có thể tử vong",
+    "pet": "all"
+  },
+  {
+    "name": "Nho / Nho khô",
+    "safe": false,
+    "severity": "high",
+    "reason": "Gây suy thận cấp ở chó, mèo ít ảnh hưởng hơn",
+    "pet": "dog"
+  },
+  {
+    "name": "Hành / Tỏi",
+    "safe": false,
+    "severity": "medium",
+    "reason": "Phá hủy hồng cầu, gây thiếu máu. Tỏi độc gấp 5 lần hành",
+    "pet": "all"
+  },
+  {
+    "name": "Xương gà nấu chín",
+    "safe": false,
+    "severity": "medium",
+    "reason": "Dễ vỡ, mảnh xương nhọn gây thủng ruột",
+    "pet": "all"
+  },
+  {
+    "name": "Caffeine",
+    "safe": false,
+    "severity": "high",
+    "reason": "Gây tim đập nhanh, co giật, tử vong",
+    "pet": "all"
+  },
+  {
+    "name": "Xylitol (kẹo cao su)",
+    "safe": false,
+    "severity": "high",
+    "reason": "Hạ đường huyết đột ngột, suy gan cấp",
+    "pet": "dog"
+  },
+  {
+    "name": "Bơ (Avocado)",
+    "safe": false,
+    "severity": "low",
+    "reason": "Chứa persin, gây nôn và tiêu chảy",
+    "pet": "all"
+  },
+  {
+    "name": "Rượu bia",
+    "safe": false,
+    "severity": "high",
+    "reason": "Gây ngộ độc rượu, hôn mê, tử vong",
+    "pet": "all"
+  },
+  {
+    "name": "Macadamia",
+    "safe": false,
+    "severity": "medium",
+    "reason": "Gây yếu chân, nôn, run, sốt ở chó",
+    "pet": "dog"
+  },
+  {
+    "name": "Thịt gà luộc",
+    "safe": true,
+    "severity": "none",
+    "reason": "An toàn, giàu protein, dễ tiêu hóa",
+    "pet": "all"
+  },
+  {
+    "name": "Cà rốt",
+    "safe": true,
+    "severity": "none",
+    "reason": "An toàn, giàu vitamin A, tốt cho mắt và lông",
+    "pet": "all"
+  },
+  {
+    "name": "Bí đỏ",
+    "safe": true,
+    "severity": "none",
+    "reason": "An toàn, hỗ trợ tiêu hóa, giàu chất xơ",
+    "pet": "all"
+  },
+  {
+    "name": "Blueberry",
+    "safe": true,
+    "severity": "none",
+    "reason": "An toàn, giàu chất chống oxy hóa",
+    "pet": "all"
+  },
+  {
+    "name": "Cơm trắng",
+    "safe": true,
+    "severity": "none",
+    "reason": "An toàn khi nấu chín, tốt cho hệ tiêu hóa yếu",
+    "pet": "all"
+  },
+  {
+    "name": "Sữa bò",
+    "safe": false,
+    "severity": "low",
+    "reason": "Nhiều thú cưng không dung nạp lactose, gây tiêu chảy",
+    "pet": "all"
+  }
+]

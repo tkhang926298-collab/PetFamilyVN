@@ -1,0 +1,72 @@
+{
+  "dog": [
+    {
+      "vaccine": "5-in-1 (DHPPi)",
+      "dose": 1,
+      "age_weeks": 6,
+      "note": "Mũi 1: Care, Parvo, Sài sốt"
+    },
+    {
+      "vaccine": "5-in-1 (DHPPi)",
+      "dose": 2,
+      "age_weeks": 9,
+      "note": "Mũi 2: Tăng cường"
+    },
+    {
+      "vaccine": "5-in-1 (DHPPi)",
+      "dose": 3,
+      "age_weeks": 12,
+      "note": "Mũi 3: Hoàn tất cơ bản"
+    },
+    {
+      "vaccine": "Dại (Rabies)",
+      "dose": 1,
+      "age_weeks": 12,
+      "note": "BẮT BUỘC theo quy định"
+    },
+    {
+      "vaccine": "7-in-1 (DHPPi+LR)",
+      "dose": "yearly",
+      "age_weeks": 52,
+      "note": "Nhắc lại hàng năm"
+    },
+    {
+      "vaccine": "Dại (Rabies)",
+      "dose": "yearly",
+      "age_weeks": 64,
+      "note": "Nhắc lại hàng năm"
+    }
+  ],
+  "cat": [
+    {
+      "vaccine": "3-in-1 (FVRCP)",
+      "dose": 1,
+      "age_weeks": 8,
+      "note": "Mũi 1: Calicivirus, Panleukopenia"
+    },
+    {
+      "vaccine": "3-in-1 (FVRCP)",
+      "dose": 2,
+      "age_weeks": 12,
+      "note": "Mũi 2: Tăng cường"
+    },
+    {
+      "vaccine": "Dại (Rabies)",
+      "dose": 1,
+      "age_weeks": 12,
+      "note": "BẮT BUỘC theo quy định"
+    },
+    {
+      "vaccine": "3-in-1 (FVRCP)",
+      "dose": "yearly",
+      "age_weeks": 52,
+      "note": "Nhắc lại hàng năm"
+    },
+    {
+      "vaccine": "Dại (Rabies)",
+      "dose": "yearly",
+      "age_weeks": 64,
+      "note": "Nhắc lại hàng năm"
+    }
+  ]
+}

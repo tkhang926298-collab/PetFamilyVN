@@ -1,0 +1,417 @@
+Specification Dự Án: Pet Is My Family (Phiên Bản 1.0 - Full Detailed Spec Với UX Flow, Dependencies Locked & Modular Structure)
+1. Giới Thiệu Tổng Quan
+Tên Dự Án: Pet Is My Family – Ứng dụng chẩn đoán bệnh thú cưng (tập trung chó/mèo) dựa trên AI, hỗ trợ chủ thú cưng tại Việt Nam (Hà Nội/TP.HCM) tra cứu nhanh triệu chứng qua text hoặc ảnh với luồng an toàn, tương tác.
+Mục Tiêu Chính:
+
+Flow chẩn đoán chi tiết qua hình ảnh: Upload/chụp ảnh + mô tả → AI phân tích (Gemini) → Khoanh vùng bệnh → Hỏi thêm 5 câu → Groq tổng hợp → Confirm ảnh mẫu → Gợi ý điều trị (không kê đơn hoặc hướng vet).
+Cải Tiến UX: Đạt 70-80% hợp lý, thân thiện newbie (tooltips, progress bar, voice input Zalo), one-page flow cho chẩn đoán (load <2s trên Zalo Mini App).
+Nhắc Nhở Vacxin & Phòng Bệnh: Tích hợp lịch tiêm chuẩn Bộ NN&PTNT, push notification qua Firebase.
+Cộng Đồng Forum/Share: Screen chia sẻ kinh nghiệm, moderate Groq.
+Sổ Tay "Cảnh Báo Bả" & Khu Vực Nguy Hiểm: Bản đồ cộng đồng pin đánh dấu bả độc/trộm (OSM Leaflet).
+Tra Cứu Nhanh Thực Phẩm Độc Hại: Nút tra cứu tức thì với color-coded.
+Monetize Thêm: Premium pet profile + ads pet food (Royal Canin VN).
+Disclaimer Rõ Ràng: Popup + footer miễn trừ trách nhiệm pháp lý.
+Phạm Vi: Việt Nam (tiếng Việt, focus Hà Nội/đô thị), triển khai Zalo Mini App (ZMA) cho user + Web Admin (Flutter) cho quản trị trước.
+Phiên Bản: 1.0 (Cập nhật: Chi tiết UX flow user; dependencies locked versions; tree folder modular; logic phân chia file/folder để tránh overload – mỗi file <300 LOC, tách services/hooks riêng).
+Nền Tảng:
+Admin Tool Flow CHI TIẾT (2 Bước – Review Thủ Công)
+Mục tiêu: Đảm bảo 100% dữ liệu trước khi vào Supabase.
+Bước 1: Crawl & Review (extract_data.py + main_gui.py)
+File chính: admin_tool/crawler/extract_data.py
+Logic:
+
+Nhận list URL (từ TXT hoặc GUI input).
+Loop từng URL:
+Crawl BeautifulSoup → title, body, img links.
+Gemini tóm tắt + dịch + visual_desc + 5 questions.
+Groq gen disease_id + keywords.
+Cloudinary upload ảnh (temp tag review_[disease]).
+
+Không insert Supabase.
+Tạo DataFrame pandas với các cột sau:csvdisease_id, disease_name_vi, keywords, symptoms_vi, treatment_vi, 
+visual_desc, prescription_otc, prescription_rx, questions_json, 
+cloudinary_links_json, status (default="pending_review"), notes
+Export 2 file:
+review/review_data.csv (dùng pandas.to_csv)
+review/review_data.xlsx (pandas.ExcelWriter) → dễ mở Excel review.
+
+
+GUI Flow (main_gui.py):
+
+Tab 1: "Crawl & Review"
+Input: File URLs.txt hoặc paste links
+Button "Bắt đầu Crawl" → Progress bar Tkinter → Xuất file + thông báo "Đã crawl X bệnh. Mở review_data.xlsx để kiểm tra".
+
+Tab 2: "Upload CSV" (Bước 2)
+
+Hành động Review Thủ Công (bạn làm):
+
+Mở review_data.xlsx
+Cột cần kiểm tra/sửa:
+disease_name_vi, symptoms_vi, visual_desc
+Xóa dòng rác (AI sinh sai)
+Sửa chính tả, thêm chi tiết
+Cột status → "approved" hoặc "reject"
+
+Lưu file lại (vẫn là .xlsx hoặc .csv)
+
+Bước 2: Upload (upload_csv.py)
+File chính: admin_tool/supabase_updater/upload_csv.py
+Logic:
+Python# Pseudo-code
+import pandas as pd
+from supabase import create_client
+
+df = pd.read_csv("review/review_data.csv")
+df = df[df['status'] == 'approved']          # Chỉ lấy approved
+
+for index, row in df.iterrows():
+    data = {
+        "disease_id": row['disease_id'],
+        "disease_name": row['disease_name_vi'],
+        "symptoms_vi": row['symptoms_vi'],
+        ...
+        "cloudinary_links": json.loads(row['cloudinary_links_json']),
+        "questions": json.loads(row['questions_json'])
+    }
+    supabase.table("diseases").insert(data).execute()
+    
+    # Rename Cloudinary tag từ "review_xxx" → "disease_xxx"
+    cloudinary_handler.rename_tag(...)
+GUI: Button "Upload CSV đã review" → Chọn file → Progress → Log "Đã upload X bệnh thành công".Web Admin: Flutter Web (quản trị nội bộ).
+
+User App: Zalo Mini App (ReactJS + ZMP Framework: Load nhanh <2s, UI Zalo chuyên nghiệp; one-page diagnose modular).
+Giả Định & Rủi Ro:
+Độ chính xác AI ~80%; disclaimer "Không thay thế bác sĩ thú y".
+Cloudinary free tier (25GB, auto nén). OSM Leaflet free (coverage VN tốt).
+Chống lạm dụng: IP hash + device ID. Scale: 1k user (0 VND).
+Nguyên Tắc Modular: Mỗi file/folder chỉ 1 trách nhiệm (SRP: Single Responsibility Principle). Services: Hooks tách logic API; Components: Reusable UI; Utils: Helpers thuần (không business logic). Tổng LOC dự án <5k (ZMA <2k).
+
+2. Spec Code Các Thư Viện (Dependencies Locked Versions)
+Dependencies locked để tránh breaking changes (test trên Node 20.11.0, Python 3.10.12). Lý do: Stable, compatible Zalo/ZMP (v3+), low bundle size (<500KB ZMA). Cài: yarn install (ZMA), pip install -r requirements.txt (Admin).
+Python (Admin Tool – requirements.txt):
+
+requests==2.28.2: HTTP crawl (ổn định, timeout handling).
+beautifulsoup4==4.11.2: Parse HTML (lọc img/tags nhanh).
+google-generativeai==0.3.2: Gemini API (multimodal, VN lang support).
+groq==0.4.1: Groq SDK (low-latency matching).
+supabase==2.4.0: Supabase client (realtime insert).
+pandas==1.5.3: Data processing (CSV seed).
+Pillow==10.0.1: Nén ảnh (pre-upload).
+cloudinary==1.40.0: Cloudinary upload (auto tag/folder).
+geopy==2.4.1: OSM geocode (seed pins Hà Nội).
+python-dotenv==1.0.0: Load .env keys.
+Lý do lock: Compatible Python 3.10; tránh deprecation (e.g., requests >2.29 có async changes). Test: pip check.
+
+Web Admin (Flutter – pubspec.yaml):
+
+flutter: ^3.24.0: Core framework (stable Android/Web).
+supabase_flutter: ^2.5.6: Auth/DB (realtime).
+google_generative_ai: ^0.3.2: Gemini.
+http: ^0.13.5: API calls.
+flutter_map: ^7.0.2: OSM map (thay google_maps_flutter, free).
+geolocator: ^11.1.0: Location.
+cloudinary_public: ^0.0.5: Upload ảnh.
+Lý do lock: Flutter stable; flutter_map lightweight cho OSM (không phí). Test: flutter pub get.
+
+User App (Zalo Mini App – package.json, yarn):
+
+@zmp/react-toolkit: ^3.0.0: ZMP UI kit (Zalo-native components: tabs, modals, load <2s).
+react: ^18.2.0: Core React (hooks, state).
+react-dom: ^18.2.0: DOM rendering.
+@supabase/supabase-js: ^2.45.4: Supabase (auth/realtime).
+@cloudinary/react: ^1.13.2: Cloudinary UI (image optimizer).
+@cloudinary/url-gen: ^1.19.1: URL gen (nén on-fly).
+firebase: ^10.12.5: FCM push.
+react-leaflet: ^4.2.1: OSM maps (markers, realtime).
+leaflet: ^1.9.4: Leaflet core (tiles OSM).
+axios: ^1.7.2: HTTP (interceptors cho xu deduct).
+react-query: ^3.39.3: Caching (queries <1s repeat).
+react-hook-form: ^7.52.0: Forms (questions/upload validation).
+react-slider: ^2.0.4: Confirm % slider.
+react-chat-ui: ^0.1.0: Community chat (Supabase stream).
+Lý do lock: ZMP v3+ Zalo 2026 compatible; react-leaflet lightweight (50KB gzipped); react-query giảm API calls 70%. Test: yarn test (Jest). Bundle: yarn build <300KB.
+
+3. Project Structure (Tree Folder)
+Cấu trúc modular: Tách services (logic API/hooks), components (UI reusable), pages (routes ZMP), utils (helpers). Tổng: 50+ files, mỗi <250 LOC. Zalo: zmp-cli.json routes (tabs: Home/Diagnose/Community/Profile/Danger). Admin: Tkinter GUI simple (3 screens).
+pet_is_my_family/
+├── README.md                  # Setup, run ZMA (zmp start), modular guidelines
+├── .env.example               # Keys (SUPABASE_URL, CLOUDINARY_CLOUD_NAME, GEMINI_KEY)
+├── config/                    # Cấu hình JSON/YAML (không code)
+│   ├── supabase_config.yaml   # Tables schemas, realtime channels
+│   ├── vacxin_schedule.json   # Lịch VN (chó/mèo arrays)
+│   ├── food_checker.json      # 20+ items (risk levels)
+│   ├── cloudinary_config.json # Upload presets (tags, nén q_70)
+│   └── osm_config.json        # Tiles URL, Nominatim rate limit
+├── admin_tool/                # Python GUI (modular: 1 file/logic)
+│   ├── requirements.txt       # Locked deps
+│   ├── main_gui.py            # Entry: Tkinter window (inputs + buttons)
+│   ├── crawler/               # Crawl module (tách BS4 logic)
+│   │   └── extract_data.py    # Parse URL → text/keywords (1 func/file)
+│   ├── ai_processor/          # AI module (tách Gemini/Groq)
+│   │   ├── gemini_handler.py  # Tóm tắt/dịch (prompts constants)
+│   │   └── groq_handler.py    # Matching/keywords (temp=0)
+│   ├── supabase_updater/      # DB module
+│   │   └── db_insert.py       # Batch insert diseases/food (error retry)
+│   └── utils/                 # Helpers (pure funcs)
+│       ├── image_handler.py   # Nén Pillow + Cloudinary upload (tag gen)
+│       ├── geocode_handler.py # OSM Nominatim (seed pins)
+│       └── validator.py       # JSON/data check (schema validation)
+├── web_admin/                 # Flutter Web (modular screens/services)
+│   ├── pubspec.yaml           # Locked deps
+│   ├── lib/
+│   │   ├── main.dart          # Entry (MaterialApp routes)
+│   │   ├── screens/           # UI pages (1 screen/file)
+│   │   │   ├── admin_home.dart # Dashboard logs/pins
+│   │   │   ├── disease_edit.dart # CRUD diseases
+│   │   │   └── user_manage.dart # View users/xu
+│   │   ├── services/          # Logic (isolated classes)
+│   │   │   ├── supabase_service.dart # DB queries
+│   │   │   ├── ai_service.dart # Gemini/Groq calls
+│   │   │   └── map_service.dart # OSM flutter_map pins
+│   │   └── widgets/           # Reusable UI (stateless)
+│   │       ├── disclaimer_widget.dart # Footer popup
+│   │       └── map_widget.dart # OSM viewer
+│   └── assets/                # Icons/data
+├── zalo_mini_app/             # User App: React + ZMP (modular hooks/components)
+│   ├── package.json           # Locked deps
+│   ├── zmp-cli.json           # Routes: tabs (Home, Diagnose, etc.)
+│   ├── src/                   # React source (ES6+ hooks)
+│   │   ├── App.js             # Entry: ZMP App (Router + ThemeProvider)
+│   │   ├── components/        # Reusable UI (1 component/file, <100 LOC)
+│   │   │   ├── Header.jsx     # ZMP nav bar (tabs + xu display)
+│   │   │   ├── DisclaimerPopup.jsx # Modal first-launch (checkbox accept)
+│   │   │   ├── FoodCheckerCard.jsx # Search input + color badge
+│   │   │   ├── QuestionStepper.jsx # Inline 5 Qs (react-hook-form)
+│   │   │   ├── ConfirmSlider.jsx # Carousel + % slider (react-slider)
+│   │   │   ├── VacxinReminder.jsx # Card with FCM preview
+│   │   │   ├── CommunityBubble.jsx # Chat message (realtime)
+│   │   │   └── DangerPinMarker.jsx # Leaflet marker popup
+│   │   ├── pages/             # ZMP pages (1 route/file, one-page logic)
+│   │   │   ├── Home.jsx       # Dashboard: Xu + quick food + vacxin
+│   │   │   ├── Diagnose.jsx   # One-page: Sections scroll (upload → treat)
+│   │   │   ├── Community.jsx  # List posts + chat (Supabase stream)
+│   │   │   ├── Profile.jsx    # Pet form + premium report
+│   │   │   ├── DangerZone.jsx # Map view + pin form
+│   │   │   └── Recharge.jsx   # Nạp xu + ads banner
+│   │   ├── services/          # Business logic (custom hooks, 1 API/file)
+│   │   │   ├── useAuth.js     # Supabase login + IP hash
+│   │   │   ├── useXu.js       # Balance check/deduct (react-query)
+│   │   │   ├── useAi.js       # Gemini/Groq hooks (prompts cached)
+│   │   │   ├── useDb.js       # Supabase queries (diseases/food)
+│   │   │   ├── useCloudinary.js # Upload temp/rename on confirm
+│   │   │   ├── useNotification.js # FCM vacxin schedule
+│   │   │   ├── useCommunity.js # Realtime posts + Groq moderate
+│   │   │   ├── usePremium.js  # Profile history + monthly report
+│   │   │   └── useMap.js      # Leaflet OSM + Nominatim geocode
+│   │   ├── models/            # Data interfaces (TS-like JS objects)
+│   │   │   ├── User.js        # {id, xu, ip_hash}
+│   │   │   ├── Disease.js     # {name, symptoms, cloudinary_links}
+│   │   │   ├── Vacxin.js      # {species, age, reminder_date}
+│   │   │   ├── Post.js        # {text, image_url, comments[]}
+│   │   │   ├── PetProfile.js  # {name, history[]}
+│   │   │   ├── DangerZone.js  # {lat, lon, type: 'bả'/'trộm'}
+│   │   │   └── FoodItem.js    # {name, risk_level, desc}
+│   │   └── utils/             # Pure helpers (no state/API)
+│   │       ├── constants.js   # Prompts, colors (Đỏ #FF0000)
+│   │       ├── antiAbuse.js   # IP/device hash (crypto-js)
+│   │       └── validators.js  # Form schema (Yup-like simple funcs)
+│   ├── public/                # Zalo manifest (icons)
+│   ├── dist/                  # Build (zmp build)
+│   └── tests/                 # Jest (1 test/file)
+│       ├── components.test.js # UI snapshots
+│       └── services.test.js   # Hooks mock API
+├── docs/                      # Documentation (MD files)
+│   ├── ux_flow.md             # Chi tiết UX user (dưới đây)
+│   ├── modular_guidelines.md  # SRP rules (file <250 LOC)
+│   └── deployment_guide.md    # Zalo console + Cloudinary webhook
+└── crawl_output/              # Generated (gitignore)
+    ├── images/                # Temp local
+    └── logs/                  # Admin runs
+4. Flow UX Của User (Chi Tiết – Thân Thiện Newbie, One-Page Focus)
+UX Tổng: Zalo-native (ZMP: Swipe tabs, haptic feedback), load <2s (react-query prefetch). Newbie-friendly: Onboarding tour (ZMP stepper: "Chào! Chụp ảnh pet để chẩn đoán"), tooltips (Zalo popover: "Nhấn mic để voice mô tả"), progress bar (0-100% diagnose). Accessibility: VN voice-over, high-contrast colors. A/B test: One-page vs multi (one-page giảm drop-off 40%). Disclaimer: Modal first-launch (must scroll + checkbox), footer mỗi page (tap to expand).
+Flow Chi Tiết (Zalo Mini App – Tab-Based Navigation):
+
+Onboarding & Login (App.js + useAuth.js):
+Zalo OA auto-login (nếu có) → Supabase email/Google fallback.
+First-launch: Disclaimer modal ("App chỉ tham khảo; không chịu trách nhiệm tự trị. Vet ngay nếu nghi! Checkbox: Đã đọc"). Tour: 3 slides (Diagnose, Map, Community).
+Xu init: 10 free (popup "Nạp 10k = 2 xu"). Transition: Home tab. Thời gian: <5s.
+
+Home Tab (Home.jsx – Dashboard, <1s load):
+Top: Xu display (ZMP badge: "9 xu còn").
+Middle: Quick Food Checker (search bar: "Chó ăn hành?" → Instant Groq: Color badge Đỏ + desc "Thiếu máu, tránh ngay!" Tooltip: "Dựa PetMD").
+Bottom: Vacxin card (input loài/tuổi → "Mèo 6 tuần: Vaccine 3 bệnh mũi 1 – Nhắc 7 ngày nữa" + FCM preview). Nút "Bắt Đầu Chẩn Đoán" → Diagnose tab.
+
+Diagnose Tab (Diagnose.jsx – One-Page Scroll, Progress Bar):
+Section 1: Upload + Mô Tả (20% progress): Zalo camera/upload (useCloudinary temp) + TextField/voice (ZMP mic). Tooltip: "Mô tả: 'Rụng lông mảng, ngứa'". Deduct 1 xu (confirm popup).
+Section 2: Gemini Phân Tích (40%): Auto-scroll: "Tình trạng: Da đỏ sưng (match 85% với mô tả)". Nếu <50%: "Thử lại?" (back).
+Section 3: Khoanh Vùng Bệnh (50%): List top-5 (Supabase, useDb) với thumbnail Cloudinary.
+Section 4: 5 Câu Hỏi (60-80%): Inline stepper (QuestionStepper): Q1 "Sốt >38°C?" (Yes/No radio, react-hook-form). Collect array. Skip: -0.5 xu.
+Section 5: Groq Tổng Hợp (90%): "Nghi ngờ Ringworm 85% (lý do: Rụng lông + ngứa)".
+Section 6: Confirm Ảnh (95%): Carousel Cloudinary links + slider % (0-100%). Tooltip: "Giống 80%? Xác nhận để lưu ảnh". Nếu confirm: Rename tag Cloudinary (useCloudinary).
+Section 7: Treat (100%): Cards: Symptoms tổng hợp + OTC ("Bôi kem không kê đơn") hoặc RX ("Cần vet – Maps Hà Nội"). Disclaimer footer tap: Expand full text. Nút "Lưu & Share" (Zalo share). Feedback: +1 xu nếu rate 4*.
+
+Community Tab (Community.jsx – Realtime List):
+Top: Search posts. List: Anonym posts (text + Cloudinary ảnh) + comments (useCommunity stream). Nút "Đăng Bài" (form + moderate Groq: "Spam?"). Cross-link: Share pin từ Danger.
+
+Profile Tab (Profile.jsx – Form + Report):
+Form: Pet info (ảnh, tuổi, lịch sử). Premium: Nút "Báo Cáo Tháng" (Groq gen từ history, +2 xu). Ads: Banner Royal Canin (tap affiliate).
+
+Danger Zone Tab (DangerZone.jsx – Map Focus):
+Full-screen: Leaflet OSM (useMap: center Hà Nội [21.0285, 105.8542], zoom 12). Pins realtime (markers: Đỏ bả/Cam trộm).
+Nút FAB "+ Pin" (ZMP): Desc dropdown (bả/trộm) + ảnh Cloudinary + geocode Nominatim. Insert Supabase anonym. Alert: Nếu <1km, ZMP toast "Cảnh báo bả gần!" + FCM. Tooltip: "Pin để cứu pet khác!".
+
+
+Error Handling UX: Offline: Cache mode (react-query stale-while-revalidate 5min). Low xu: "Nạp ngay?" modal. Load fail: ZMP skeleton + retry. Metrics: Track drop-off (Zalo analytics).
+5. Logic Từng Folder (Phân Chia Hợp Lý – Modular Design)
+Nguyên Tắc: Tách theo layers (UI/Services/Models/Utils). Mỗi file: 1 trách nhiệm, <250 LOC, export default/single func. Hooks (services): useEffect cho side-effects (API), no UI. Components: Pure JSX + props, no state. Utils: Stateless funcs.
+
+admin_tool/: GUI-driven (main_gui.py: Event handlers). Crawler/: Input → Output text (extract_data.py: 1 parse func). AI/: Prompt → JSON (gemini_handler.py: 1 call func). Supabase/: Query → Insert (db_insert.py: Batch + retry). Utils/: Transform data (image_handler.py: Upload single ảnh).
+web_admin/lib/: Screens/: Route handlers (admin_home.dart: Scaffold body). Services/: Isolated providers (supabase_service.dart: StreamSubscription realtime). Widgets/: Dumb UI (disclaimer_widget.dart: AlertDialog).
+zalo_mini_app/src/:
+components/: Presentational (Header.jsx: ZMP Navbar props only).
+pages/: Container (Home.jsx: Orchestrate components + hooks).
+services/: Custom hooks (useAuth.js: useState + Supabase auth, return [user, login]).
+models/: Schemas (User.js: interface {id: string, xu: number}).
+utils/: Helpers (constants.js: export const PROMPTS = {...}; validators.js: isValidDesc(desc)).
+
+
+Dev Tips: ESLint (no-unused-vars), Prettier format. Modular giúp test dễ (mock 1 hook/file).
+
+1. Chiến Lược Kinh Doanh & "Lách" Kiểm Duyệt
+Dù gọi là "Xu", nhưng trên giấy tờ và điều khoản sử dụng, bạn TUYỆT ĐỐI KHÔNG được mô tả đây là tiền ảo (để tránh bị Zalo đánh quy chế Game cần giấy phép G1-G4).
+
+Định nghĩa lại: Hãy gọi gói nạp là "Gói lượt tư vấn AI" (Consultation Credits).
+
+Quy đổi:
+
+User mới: Tặng 10 lượt (trị giá 50k - mồi nhử cực tốt).
+
+Gói cơ bản: 10.000 VNĐ = 2 lượt (tương đương 5k/lần chẩn đoán).
+
+Gói tiết kiệm (Upsell): 20.000 VNĐ = 5 lượt (Khuyến khích mua gói này).
+
+2. Thiết Kế Cơ Sở Dữ Liệu (Supabase)
+Bạn cần chỉnh sửa Database để quản lý ví tiền người dùng an toàn. Không lưu xu ở LocalStorage (dễ bị hack), phải lưu ở Server.
+
+Bảng profiles (Thêm cột balance):
+
+SQL
+alter table profiles 
+add column xu_balance int default 10; -- Mặc định tặng 10 xu khi tạo user mới
+Bảng transactions (Lịch sử nạp/trừ tiền):
+
+SQL
+create table transactions (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references auth.users(id),
+  amount int,           -- Số xu thay đổi (ví dụ: +2, -1)
+  money_amount int,     -- Số tiền VNĐ (ví dụ: 10000, 0)
+  type text,            -- 'DEPOSIT' (Nạp) hoặc 'USAGE' (Dùng) hoặc 'BONUS' (Tặng)
+  description text,     -- "Nạp gói 10k", "Chẩn đoán bệnh Care"
+  status text,          -- 'PENDING', 'COMPLETED', 'FAILED'
+  created_at timestamp with time zone default now()
+);
+
+3. Quy Trình Chẩn Đoán Trừ Tiền (Logic Backend)
+Để an toàn, việc trừ xu nên thực hiện qua Supabase Database Function (RPC) thay vì xử lý ở React (Client-side) để tránh user sửa code JS gian lận.
+
+Function use_credits trong Supabase (SQL):
+
+SQL
+create or replace function use_credits(u_id uuid, cost int)
+returns boolean as $$
+declare
+  current_bal int;
+begin
+  -- Lấy số dư hiện tại
+  select xu_balance into current_bal from profiles where id = u_id;
+  
+  -- Kiểm tra đủ tiền không
+  if current_bal >= cost then
+    -- Trừ tiền
+    update profiles set xu_balance = xu_balance - cost where id = u_id;
+    -- Ghi log
+    insert into transactions (user_id, amount, type, description, status)
+    values (u_id, -cost, 'USAGE', 'Chẩn đoán AI', 'COMPLETED');
+    return true; -- Thành công
+  else
+    return false; -- Hết tiền
+  end if;
+end;
+$$ language plpgsql security definer;
+
+4. Tích Hợp Thanh Toán Trên Zalo Mini App (Nạp Xu)
+Vì bạn làm cá nhân (hoặc team nhỏ), việc đăng ký cổng thanh toán ZaloPay Merchant đôi khi thủ tục rườm rà. Giải pháp tốt nhất hiện nay là VietQR (Chuyển khoản quét mã).
+
+Flow nạp tiền 10k = 2 xu:
+
+User chọn gói "2 Xu - 10.000đ" trên App.
+
+App tạo một mã QR động (Dynamic QR) chứa nội dung chuyển khoản định danh.
+
+Cú pháp nội dung: PET [USER_ID] (Ví dụ: PET user123).
+
+User quét mã bằng app ngân hàng -> Chuyển khoản thành công.
+
+Xử lý cộng xu:
+
+(Thủ công - Tiết kiệm nhất): Bạn (Admin) nhận tin nhắn biến động số dư -> Vào Web Admin -> Bấm "Cộng xu" cho user đó.
+Ví dụ Code React hiển thị QR (trong Recharge.jsx):
+
+JavaScript
+import React from 'react';
+import { Page, Box, Text, Button } from 'zmp-ui';
+
+const Recharge = ({ user }) => {
+  // Tạo link QR VietQR nhanh (API công khai, không cần đăng ký)
+  // Ngân hàng: MBBank (ví dụ), Số TK: 0987654321
+  // Cú pháp: PET + 6 ký tự cuối của UserID để dễ check
+  const transferContent = `PET ${user.id.slice(0,6)}`; 
+  const amount = 10000;
+  const qrUrl = `https://img.vietqr.io/image/MB-0987654321-compact.png?amount=${amount}&addInfo=${transferContent}`;
+
+  return (
+    <Page>
+      <Box className="text-center p-4">
+        <Text.Title>Nạp thêm lượt chẩn đoán</Text.Title>
+        <Text className="text-gray-500 mb-4">Gói cơ bản: 2 Xu</Text>
+        
+        {/* Ảnh QR */}
+        <img src={qrUrl} alt="QR Code" className="w-64 mx-auto mb-4" />
+        
+        <Text.Title className="text-xl text-primary font-bold">10.000 VNĐ</Text.Title>
+        <Text className="text-sm mt-2">Nội dung CK: {transferContent}</Text>
+        
+        <Button 
+          className="mt-4" 
+          onClick={() => window.open(`https://zalo.me/s`, '_blank')} // Mở app bank/zalo pay
+        >
+          Đã chuyển khoản xong
+        </Button>
+        <Text className="text-xs text-gray-400 mt-2">
+          Hệ thống sẽ cộng xu trong 1-5 phút. Liên hệ Admin nếu cần gấp.
+        </Text>
+      </Box>
+    </Page>
+  );
+};
+5. Xử Lý Logic Trên Web Admin
+Trên trang Web Admin (Flutter/React), bạn cần một trang "Transaction Management" để duyệt các giao dịch nạp tiền (nếu làm thủ công hoặc để kiểm tra lại).
+
+Tính năng:
+
+List danh sách user request nạp tiền (hoặc check log bank).
+
+Nút bấm "Approve & Add Xu": Gọi API update xu_balance + 2 và gửi thông báo ZNS (Zalo Notification) cho khách: "Bạn đã nạp thành công 2 Xu. Chúc Boss mau khỏe!".
+
+6. Tổng Kết Doanh Thu Dự Kiến
+Nếu mỗi ngày có 50 người dùng hết 10 xu free và 20% trong số đó (10 người) nạp gói 10k:
+
+Doanh thu ngày: 100.000 VNĐ.
+
+Tháng: 3.000.000 VNĐ.
+
+Chi phí duy trì: ~0đ (Server Free, API Free).
+
+Lợi nhuận: 100%.

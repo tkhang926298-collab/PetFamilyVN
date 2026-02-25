@@ -23,8 +23,26 @@ const TABS = [
 function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('home');
+
+  const getTabFromHash = () => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState(getTabFromHash());
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveTab(getTabFromHash());
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateTo = (tabId) => {
+    window.location.hash = tabId;
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,7 +74,7 @@ function App() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
-    setActiveTab('home');
+    navigateTo('home');
   };
 
   if (authLoading) {
@@ -107,7 +125,7 @@ function App() {
             <span
               className="user-name"
               style={{ cursor: 'pointer', textDecoration: 'underline' }}
-              onClick={() => setActiveTab('profile')}
+              onClick={() => navigateTo('profile')}
               title="Xem Hồ Sơ"
             >
               👤 {displayName}
@@ -118,7 +136,7 @@ function App() {
       </header>
 
       <main className="main-content">
-        {activeTab === 'home' && <Home onNavigate={setActiveTab} />}
+        {activeTab === 'home' && <Home onNavigate={navigateTo} />}
         {activeTab === 'diagnose' && <Diagnose />}
         {activeTab === 'nutrition' && <NutritionLookup />}
         {activeTab === 'food' && <FoodChecker />}
@@ -133,7 +151,7 @@ function App() {
           <button
             key={tab.id}
             className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => navigateTo(tab.id)}
           >
             <span className="nav-icon">{tab.icon}</span>
             <span className="nav-label">{tab.label}</span>

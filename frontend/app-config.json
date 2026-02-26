@@ -1,0 +1,18 @@
+{
+    "app": {
+        "title": "Pet Is My Family",
+        "headerTitle": "Pet Is My Family",
+        "headerColor": "#007aff",
+        "textColor": "white",
+        "statusBar": "transparent",
+        "leftButton": "back"
+    },
+    "appId": "4168799382026009039",
+    "listCSS": [
+        "assets/index-DBSmC5Gw.css"
+    ],
+    "listSyncJS": [
+        "assets/index.lCJl7xuu.module.js"
+    ],
+    "listAsyncJS": []
+}

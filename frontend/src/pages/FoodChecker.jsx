@@ -16,9 +16,12 @@ export default function FoodChecker() {
 
     const filtered = useMemo(() => {
         return foodData.filter(f => {
-            const matchSearch = search === '' ||
-                f.name.toLowerCase().includes(search.toLowerCase()) ||
-                (f.name_en || '').toLowerCase().includes(search.toLowerCase());
+            const searchTerm = search.toLowerCase().trim();
+            const escapeRegExp = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp(`(^|[\\s\\-.,()])` + escapeRegExp(searchTerm) + `(?=[\\s\\-.,()]|$)`, 'i');
+            const matchSearch = searchTerm === '' ||
+                regex.test(f.name) ||
+                (f.name_en && regex.test(f.name_en));
             const matchSafe =
                 filter === 'all' ||
                 (filter === 'safe' && f.safe) ||

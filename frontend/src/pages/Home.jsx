@@ -3,9 +3,9 @@ import SupportAdmin from '../components/SupportAdmin';
 export default function Home({ onNavigate }) {
     const features = [
         { id: 'diagnose', icon: '🔬', title: 'Tra Cứu Bệnh', desc: 'Tìm hiểu bệnh theo loài, triệu chứng, mức độ nguy hiểm' },
-        { id: 'nutrition', icon: '🥗', title: 'Dinh Dưỡng', desc: 'Tra cứu dinh dưỡng theo giống, bệnh, thể trạng' },
+        { id: 'nutrition', icon: '🥗', title: 'Dinh Dưỡng', desc: 'Tra cứu dinh dưỡng và tính toán Calo mỗi ngày' },
         { id: 'food', icon: '🍽️', title: 'Thực Phẩm', desc: 'Kiểm tra thực phẩm an toàn hay độc hại cho thú cưng' },
-        { id: 'vaccine', icon: '💉', title: 'Lịch Vacxin', desc: 'Lịch tiêm phòng chuẩn cho chó và mèo theo tuần tuổi' },
+        { id: 'vaccine', icon: '📅', title: 'Lịch Sức Khoẻ', desc: 'Sổ tay theo dõi tiêm phòng, tẩy giun, nhỏ gáy' },
         { id: 'danger', icon: '⚠️', title: 'Cảnh Báo Bả', desc: 'Bản đồ cảnh báo khu vực có bả, kiểm tra an toàn' },
         { id: 'community', icon: '💬', title: 'Cộng Đồng', desc: 'Chia sẻ kinh nghiệm, góp ý và hỏi đáp' },
     ];

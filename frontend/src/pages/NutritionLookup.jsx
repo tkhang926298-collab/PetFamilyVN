@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import diseasesData from '../data/diseases.json';
 import breedNutrition from '../data/breed_nutrition.json';
 import AffiliateCompare from '../components/AffiliateCompare';
@@ -141,7 +141,7 @@ export default function NutritionLookup() {
             <p className="step-hint">Tư vấn dinh dưỡng theo giống, bệnh lý hoặc thể trạng</p>
 
             {/* Mode tabs */}
-            <div className="nutrition-tabs">
+            <div className="nutrition-tabs" style={{ flexWrap: 'wrap', gap: '8px' }}>
                 <button
                     className={`nutrition-tab ${mode === 'breed' ? 'active' : ''}`}
                     onClick={() => { setMode('breed'); handleBack(); setSearchTerm(''); }}
@@ -159,6 +159,12 @@ export default function NutritionLookup() {
                     onClick={() => { setMode('condition'); handleBack(); setSearchTerm(''); }}
                 >
                     ⚖️ Theo Thể Trạng
+                </button>
+                <button
+                    className={`nutrition-tab ${mode === 'calculator' ? 'active' : ''}`}
+                    onClick={() => { setMode('calculator'); handleBack(); }}
+                >
+                    🧮 Tính Calories
                 </button>
             </div>
 
@@ -344,6 +350,197 @@ export default function NutritionLookup() {
                     advice={conditionAdvice}
                     onBack={handleBack}
                 />
+            )}
+            {/* ══════ MODE: Calculator ══════ */}
+            {mode === 'calculator' && (
+                <CaloricCalculatorTab />
+            )}
+        </div>
+    );
+}
+
+/* ── Caloric Calculator Component ── */
+/* ── Caloric Calculator Component ── */
+const POPULAR_DOG_BREEDS = [
+    { id: 'custom', name: 'Tùy chỉnh (Nhập tay)', mult: 1.0 },
+    { id: 'poodle_toy', name: 'Poodle (Toy)', mult: 1.4 },
+    { id: 'poodle_mini', name: 'Poodle (Mini)', mult: 1.3 },
+    { id: 'poodle_standard', name: 'Poodle (Standard)', mult: 1.2 },
+    { id: 'corgi', name: 'Corgi', mult: 1.1 },
+    { id: 'pug', name: 'Pug', mult: 0.9 }, // Prone to obesity
+    { id: 'phoc_soc', name: 'Phốc Sóc (Pomeranian)', mult: 1.3 },
+    { id: 'shiba', name: 'Shiba Inu', mult: 1.2 },
+    { id: 'husky', name: 'Husky Siberian', mult: 1.3 }, // Active
+    { id: 'alaska', name: 'Alaskan Malamute', mult: 1.2 },
+    { id: 'golden', name: 'Golden Retriever', mult: 1.0 },
+    { id: 'bull_phap', name: 'Bull Pháp (French Bulldog)', mult: 1.0 },
+    { id: 'cho_co', name: 'Chó Ta / Chó Cỏ', mult: 1.1 }
+];
+
+const POPULAR_CAT_BREEDS = [
+    { id: 'custom', name: 'Tùy chỉnh (Nhập tay)', mult: 1.0 },
+    { id: 'aln', name: 'Anh lông ngắn (ALN)', mult: 0.9 }, // Prone to obesity
+    { id: 'ald', name: 'Anh lông dài (ALD)', mult: 0.9 },
+    { id: 'scottish', name: 'Tai cục (Scottish Fold)', mult: 0.9 },
+    { id: 'mep_ta', name: 'Mèo Ta / Mèo Mướp', mult: 1.1 }, // Generally active
+    { id: 'ba_tu', name: 'Mèo Ba Tư', mult: 0.8 }, // Very inactive
+    { id: 'xiem', name: 'Mèo Xiêm', mult: 1.2 }, // Very active
+    { id: 'munchkin', name: 'Mèo chân ngắn (Munchkin)', mult: 1.0 }
+];
+
+function CaloricCalculatorTab() {
+    const [petType, setPetType] = useState('dog');
+    const [breedId, setBreedId] = useState('custom');
+    const [weight, setWeight] = useState('');
+    const [activity, setActivity] = useState('normal'); // loss, inactive, normal, high
+    const [result, setResult] = useState(null);
+
+    // Removing auto-weight logic as per request
+    // Just resetting result on breed change
+    useEffect(() => {
+        setResult(null);
+    }, [petType, breedId]);
+
+    const handlePetTypeChange = (type) => {
+        setPetType(type);
+        setBreedId('custom');
+        setWeight('');
+        setResult(null);
+    };
+
+    const handleWeightChange = (e) => {
+        setWeight(e.target.value);
+        setResult(null);
+    };
+
+    const calculateCalories = () => {
+        const w = parseFloat(weight);
+        if (!w || w <= 0) return;
+
+        // RER = 70 * (Weight in kg)^0.75
+        const rer = 70 * Math.pow(w, 0.75);
+        let baseMultiplier = 1;
+
+        // Activity base multiplier
+        if (petType === 'dog') {
+            if (activity === 'loss') baseMultiplier = 1.0;
+            else if (activity === 'inactive') baseMultiplier = 1.4;
+            else if (activity === 'normal') baseMultiplier = 1.8;
+            else baseMultiplier = 2.5; // high/puppy
+        } else {
+            if (activity === 'loss') baseMultiplier = 0.8;
+            else if (activity === 'inactive') baseMultiplier = 1.2;
+            else if (activity === 'normal') baseMultiplier = 1.4;
+            else baseMultiplier = 2.5; // high/kitten
+        }
+
+        // Breed specific adjustment
+        const breedList = petType === 'dog' ? POPULAR_DOG_BREEDS : POPULAR_CAT_BREEDS;
+        const breedObj = breedList.find(x => x.id === breedId);
+        const breedMult = breedObj ? breedObj.mult : 1.0;
+
+        // Final multiplier is base activity * breed adjustment
+        const finalMultiplier = Number((baseMultiplier * breedMult).toFixed(2));
+        const total = Math.round(rer * finalMultiplier);
+        setResult({ rer: Math.round(rer), total, multiplier: finalMultiplier, baseMultiplier, breedMult });
+        // End calculation logic
+    };
+
+    return (
+        <div className="condition-section" style={{ marginTop: '1rem' }}>
+            <h3 style={{ marginBottom: '1rem' }}>🧮 Gợi Ý Lượng Calories Tối Ưu Từng Ngày</h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: 'var(--c-bg-card)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--c-border)' }}>
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Loài thú cưng</label>
+                    <div className="animal-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button
+                            className={`animal-card ${petType === 'dog' ? 'active' : ''}`}
+                            style={petType === 'dog' ? { borderColor: 'var(--c-primary)' } : {}}
+                            onClick={() => handlePetTypeChange('dog')}
+                        >
+                            <span className="animal-emoji">🐕</span> <span className="animal-name" style={{ fontSize: '1rem' }}>Chó</span>
+                        </button>
+                        <button
+                            className={`animal-card ${petType === 'cat' ? 'active' : ''}`}
+                            style={petType === 'cat' ? { borderColor: 'var(--c-primary)' } : {}}
+                            onClick={() => handlePetTypeChange('cat')}
+                        >
+                            <span className="animal-emoji">🐈</span> <span className="animal-name" style={{ fontSize: '1rem' }}>Mèo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Giống phổ biến ở VN</label>
+                    <select
+                        className="search-input"
+                        style={{ appearance: 'auto', backgroundColor: 'var(--c-bg-elevated)', padding: '12px' }}
+                        value={breedId}
+                        onChange={(e) => setBreedId(e.target.value)}
+                    >
+                        {(petType === 'dog' ? POPULAR_DOG_BREEDS : POPULAR_CAT_BREEDS).map(b => (
+                            <option key={b.id} value={b.id}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Cân nặng thực tế của bé (kg)</label>
+                    <input
+                        type="number"
+                        className="search-input"
+                        placeholder="VD: 5"
+                        value={weight}
+                        onChange={handleWeightChange}
+                        min="0.1" step="0.1"
+                    />
+                </div>
+
+                <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Mức độ vận động / Thể trạng</label>
+                    <select
+                        className="search-input"
+                        style={{ appearance: 'auto', backgroundColor: 'var(--c-bg-elevated)', padding: '12px' }}
+                        value={activity}
+                        onChange={(e) => { setActivity(e.target.value); setResult(null); }}
+                    >
+                        <option value="loss">📉 Cần giảm cân (Béo phì)</option>
+                        <option value="inactive">🛋️ Ít vận động / Đã triệt sản / Lớn tuổi</option>
+                        <option value="normal">🚶 Bình thường / Trưởng thành</option>
+                        <option value="high">🏃 Năng động / Đang lớn / Đang mang thai</option>
+                    </select>
+                </div>
+
+                <button className="btn-primary" onClick={calculateCalories} style={{ marginTop: '0.5rem' }}>
+                    Tính Calories (kcal)
+                </button>
+            </div>
+
+            {result && (
+                <div className="conclusion-card nutrition-detail" style={{ marginTop: '1.5rem', animation: 'fadeUp 0.3s ease' }}>
+                    <div className="conclusion-section" style={{ borderLeftColor: '#6366F1' }}>
+                        <h3 style={{ marginBottom: '0.5rem' }}>📊 Kết quả tính toán</h3>
+                        <p style={{ marginBottom: '1rem' }}>
+                            Năng lượng nghỉ ngơi (RER): <strong>{result.rer} kcal/ngày</strong><br />
+                            <span style={{ fontSize: '0.85rem', color: 'var(--c-text-mut)' }}>(Mức tối thiểu để duy trì sự sống ở trạng thái nghỉ)</span>
+                        </p>
+                        <div style={{ background: 'var(--c-bg-card)', padding: '1.5rem', borderRadius: '12px', border: '2px solid var(--c-primary)', textAlign: 'center', marginBottom: '1rem' }}>
+                            <p style={{ fontSize: '0.9rem', color: 'var(--c-text-mut)', marginBottom: '0.5rem' }}>Nhu cầu Calories khuyến nghị (DER)</p>
+                            <h2 style={{ color: 'var(--c-primary)', margin: '0', fontSize: '2rem' }}>{result.total} kcal / ngày</h2>
+                            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', opacity: 0.8 }}>Hệ số hoạt động áp dụng: x{result.multiplier}</p>
+                        </div>
+                        <ul className="nutrition-list" style={{ marginTop: '1rem' }}>
+                            <li>Khuyên chia làm <strong>{petType === 'cat' ? '3-4' : '2-3'} bữa</strong> nhỏ mỗi ngày.</li>
+                            <li>Nếu ăn hạt khô (thường ~350-400 kcal/100g), bạn cần cho bé ăn khoảng <strong>{Math.round(result.total / 3.8)} - {Math.round(result.total / 3.5)} gram hạt/ngày</strong>.</li>
+                            {activity === 'loss' && (
+                                <li style={{ color: '#F59E0B' }}>⚠️ Đang dùng chế độ giảm cân: nên sử dụng loại hạt Weight Control (có calo thấp hơn, ~300 kcal/100g) để bé vẫn cảm thấy no bụng.</li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
             )}
         </div>
     );

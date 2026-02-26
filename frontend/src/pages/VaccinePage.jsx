@@ -49,6 +49,7 @@ export default function VaccinePage() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [formData, setFormData] = useState({
         petName: '',
+        careType: 'vaccine',
         vaccineName: '',
         date: '',
         repeat: 'once',
@@ -77,6 +78,7 @@ export default function VaccinePage() {
             id: Date.now(),
             petType: pet,
             petName: formData.petName.trim(),
+            careType: formData.careType || 'vaccine',
             vaccineName: formData.vaccineName.trim(),
             date: formData.date,
             repeat: formData.repeat,
@@ -85,7 +87,7 @@ export default function VaccinePage() {
             completed: false,
         };
         setCustomSchedules(prev => [...prev, newItem]);
-        setFormData({ petName: '', vaccineName: '', date: '', repeat: 'once', customDays: 30, note: '' });
+        setFormData({ petName: '', careType: 'vaccine', vaccineName: '', date: '', repeat: 'once', customDays: 30, note: '' });
         setShowAddForm(false);
     };
 
@@ -135,7 +137,7 @@ export default function VaccinePage() {
                     className={`filter-tab ${tab === 'custom' ? 'active' : ''}`}
                     onClick={() => setTab('custom')}
                 >
-                    📝 Lịch riêng ({myPetSchedules.length})
+                    📝 Nhắc việc ({myPetSchedules.length})
                 </button>
             </div>
 
@@ -186,16 +188,32 @@ export default function VaccinePage() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>💉 Tên vaccine</label>
+                                <label>🏷️ Nhóm chăm sóc</label>
+                                <select
+                                    className="search-input"
+                                    style={{ appearance: 'auto', backgroundColor: 'var(--c-bg-elevated)', padding: '12px' }}
+                                    value={formData.careType || 'vaccine'}
+                                    onChange={e => setFormData({ ...formData, careType: e.target.value })}
+                                >
+                                    <option value="vaccine">💉 Tiêm phòng (Vaccine)</option>
+                                    <option value="worm">🐛 Tẩy giun</option>
+                                    <option value="tick">🦟 Nhỏ gáy / Trị ve rận</option>
+                                    <option value="bath">🛁 Tắm rửa / Spa</option>
+                                    <option value="vet">🏥 Khám định kỳ</option>
+                                    <option value="other">📌 Khác</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>📝 Chi tiết việc làm / Tên thuốc</label>
                                 <input
                                     type="text"
-                                    placeholder="Ví dụ: 5-in-1, Dại..."
+                                    placeholder="Ví dụ: 5-in-1, Tẩy drontal, Cắt tỉa lông..."
                                     value={formData.vaccineName}
                                     onChange={e => setFormData({ ...formData, vaccineName: e.target.value })}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>📅 Ngày tiêm</label>
+                                <label>📅 Ngày thực hiện</label>
                                 <input
                                     type="date"
                                     value={formData.date}
@@ -257,7 +275,13 @@ export default function VaccinePage() {
                                             {isOverdue && <span className="cv-badge overdue">Quá hạn!</span>}
                                             {isSoon && !isOverdue && <span className="cv-badge soon">Sắp đến!</span>}
                                         </div>
-                                        <div className="cv-vaccine">{s.vaccineName}</div>
+                                        <div className="cv-vaccine">
+                                            {s.careType === 'worm' ? '🐛' :
+                                                s.careType === 'tick' ? '🦟' :
+                                                    s.careType === 'bath' ? '🛁' :
+                                                        s.careType === 'vet' ? '🏥' :
+                                                            s.careType === 'other' ? '📌' : '💉'} {s.vaccineName}
+                                        </div>
                                         <div className="cv-date">
                                             📅 {formatDate(s.date)}
                                             {days !== null && (
@@ -276,7 +300,7 @@ export default function VaccinePage() {
                                         )}
                                         {s.note && <div className="cv-note">📝 {s.note}</div>}
                                         <div className="cv-actions">
-                                            <button className="btn-small btn-success" onClick={() => toggleComplete(s.id)}>✓ Đã tiêm</button>
+                                            <button className="btn-small btn-success" onClick={() => toggleComplete(s.id)}>✓ Đã làm</button>
                                             <button className="btn-small btn-danger" onClick={() => deleteSchedule(s.id)}>✕ Xóa</button>
                                         </div>
                                     </div>
@@ -295,7 +319,13 @@ export default function VaccinePage() {
                                         <span className="cv-pet">{pet === 'dog' ? '🐕' : '🐈'} {s.petName}</span>
                                         <span className="cv-badge done">Hoàn thành</span>
                                     </div>
-                                    <div className="cv-vaccine">{s.vaccineName}</div>
+                                    <div className="cv-vaccine">
+                                        {s.careType === 'worm' ? '🐛' :
+                                            s.careType === 'tick' ? '🦟' :
+                                                s.careType === 'bath' ? '🛁' :
+                                                    s.careType === 'vet' ? '🏥' :
+                                                        s.careType === 'other' ? '📌' : '💉'} {s.vaccineName}
+                                    </div>
                                     <div className="cv-date">📅 {formatDate(s.date)}</div>
                                     <div className="cv-actions">
                                         <button className="btn-small" onClick={() => toggleComplete(s.id)}>↩ Hoàn tác</button>
